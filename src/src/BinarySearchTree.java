@@ -38,6 +38,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
         return node == null ? null : node.val;
     }
 
+
     private Node get(Node node, K key) {
         if (node == null)
             return null;
@@ -53,7 +54,6 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
     public void delete(K key) {
         root = delete(root, key);
     }
-
     private Node delete(Node node, K key) {
         if (node == null)
             return null;
@@ -78,10 +78,57 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 
         return node;
     }
+
     private Node min(Node node) {
         if (node.left == null)
             return node;
         return min(node.left);
+    }
+
+    private Node max(Node node) {
+        if (node.right == null)
+            return node;
+        return max(node.right);
+    }
+
+    private int findDeepest(Node node) {
+        int height = 0;
+        Node current = node;
+        while (current != null) {
+            if (current.left == null) {
+                current = current.right;
+                height++;
+            }
+            else {
+                Node pre = current.left;
+                while (pre.right != null && pre.right != current)
+                    pre = pre.right;
+
+                if (pre.right == null) {
+                    pre.right = current;
+                    current = current.left;
+                }
+                else {
+                    pre.right = null;
+                    current = current.right;
+                }
+            }
+        }
+        return height;
+    }
+
+    public int getDeepest() {
+        return findDeepest(root);
+    }
+
+    public V getMin() {
+        Node node = min(root);
+        return node.val;
+    }
+
+    public V getMax() {
+        Node node = max(root);
+        return node.val;
     }
 
     private Node deleteMin(Node node) {
@@ -100,6 +147,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
     private void inOrderTraversal(Node node, List<K> keys) {
         if (node != null) {
             inOrderTraversal(node.left, keys);
+            System.out.println(node.key);
             keys.add(node.key);
             inOrderTraversal(node.right, keys);
         }
